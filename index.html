@@ -157,7 +157,7 @@
 
         .about-container {
   display: grid;
-  grid-template-columns: 57% 43%;
+  grid-template-columns: 50% 50%;
  
   gap: 20px; /* Optional gap between columns */
   padding: 25px;
@@ -177,10 +177,13 @@
         /*new city*/
 
 .container {
-            padding: 50px 20px;
+            padding: 10px 10px;
             text-align: center;
-            background: transparent linear-gradient(180deg, #108DCC 0%, #3A007A 100%) 0% 0% no-repeat padding-box;
-opacity: 0.75;
+            /* background: transparent linear-gradient(180deg, #108DCC 0%, #3A007A 100%) 0% 0% no-repeat padding-box;
+opacity: 0.75; */
+
+background: transparent linear-gradient(0deg, #FFFFFF 0%, #3A007A82 100%) 0% 0% no-repeat padding-box;
+
             /* max-width: 1200px; */
             margin: 0 auto;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -202,14 +205,16 @@ opacity: 0.75;
         .city {
             margin: 20px;
             text-align: center;
+            
         }
 
         .city img {
             width: 200px;
             height: 200px;
-            object-fit: cover;
-            border-radius: 50%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+           
+            /* border-radius: 50%; */
+            /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
+            object-fit: contain;
         }
 
         .city-name {
@@ -218,10 +223,22 @@ opacity: 0.75;
             color: #ffffff;
         }
 
+        .bannerc{
+            width: 100%;aspect-ratio: 18/8;
+        }
+
+      
+
         @media (max-width: 768px) {
+            .bannerc{
+           aspect-ratio: 0;
+        }
+            header img {
+            height: 4.404vw;;
+        }
 
             .city img {
-                width: 150px;
+                width: 60px;
                 height: 150px;
             }
 
@@ -270,7 +287,7 @@ opacity: 0.75;
             }
 
             .city img {
-                width: 120px;
+                width: 50px;
                 height: 120px;
             }
 
@@ -343,6 +360,19 @@ background-color: rgba(255, 255, 255, 0.3);
         a{
             text-decoration: auto;
         }
+
+        .headder{
+            font: normal normal bold 4vh/50px Segoe UI;  
+letter-spacing: 0px;
+color: #EEEEF8;
+opacity: 1;
+        }
+
+        .city-txt{
+            font: normal normal bold  2vw / 0px  Segoe UI;
+letter-spacing: 0px;
+color: #3F478C;
+        }
     </style>
 </head>
 
@@ -367,13 +397,13 @@ background-color: rgba(255, 255, 255, 0.3);
                 color: #000000;">Events</a>
             </div>
         </nav>
-        <a href="https://www.phonepe.com/  " style="    margin-right: 5%;">
+        <a href="https://www.phonepe.com/  " style="    margin-right: 7%;">
         <img src="asserts/phone.png" alt="PhonePe Logo" >  </a>
     </header>
     <div class="hero">
         <div class="hero-content">
 
-            <img src="asserts/Banner1.jpg" alt="PhonePe Logo" style="width: 100%;aspect-ratio: 19/8;">
+            <img src="asserts/Banner1.jpg" alt="PhonePe Logo" class="bannerc">
 
         </div>
     </div>
@@ -392,7 +422,7 @@ background-color: rgba(255, 255, 255, 0.3);
           </div>
       </section>
     
-    <div class="content" id="about">
+    <div class="content" id="about"  style="display: none;">
         <h2>Overview</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse et lectus euismod, semper ligula at,
             mattis nisl. Nullam facilisis faucibus augue. Phasellus quis lectus malesuada, ornare tortor sit amet,
@@ -403,7 +433,7 @@ background-color: rgba(255, 255, 255, 0.3);
             Maecenas a ex at purus ultrices rutrum. Curabitur viverra mi sit amet elit sagittis laoreet. Quisque ac
             massa sed libero tempor rhoncus. Donec hendrerit eros vitae faucibus hendrerit.</p>
     </div>
-    <div class="events  " id="event">
+    <div class="events  " id="event"  style="display: none;">
         <h2 style="    display: flex;justify-content: center; font: normal normal 600 34px/53px Segoe UI;">Coming to your city</h2>
         <div class="event-item about-container ">
             <div class="tempcontrol">
@@ -431,7 +461,7 @@ background-color: rgba(255, 255, 255, 0.3);
         </div>
     </div>
 
-    <div class="co-sponsors about-container">
+    <div class="co-sponsors about-container"  style="display: none;">
         <h2 style="font: normal normal 600 50px / 106px Segoe UI;
     color: #5F259F;">Co-sponsors</h2>
         <div class="sponsor-logos">
@@ -443,7 +473,7 @@ background-color: rgba(255, 255, 255, 0.3);
         </div>
     </div>
 
-    <main class="container">
+    <main class="container" style="display: none;">
         <header>
             <h1 class="title">Coming To Your City</h1>
         </header>
@@ -467,8 +497,54 @@ background-color: rgba(255, 255, 255, 0.3);
         </section>
     </main>
 
+    <!-- <div class="container">
+        <div class="heading">Coming To Your City</div>
+        <div class="cities">
+            <div class="city">
+                <img src="asserts/Bulb.png" alt="Rocket">
+                <p>Bangalore</p>
+            </div>
+            <div class="city">
+                <img src="asserts/puns.png" alt="Globe">
+                <p>Pune</p>
+            </div>
+            <div class="city">
+                <img src="asserts/car.png" alt="Car">
+                <p>Chennai</p>
+            </div>
+            <div class="city">
+                <img src="asserts/seed.png" alt="Wheat">
+                <p>Chandigarh</p>
+            </div>
+        </div>
+    </div> -->
 
-    <footer class="footercon" style="background: white">
+
+    <div class="container">
+        <div class="headder">Coming To Your City</div>
+        <div class="cities">
+            <div class="city">
+                <img src="asserts/Bulb.png" alt="Rocket">
+                <p class="city-txt">Bangalore</p>
+            </div>
+            <div class="city">
+                <img src="asserts/puna.png" alt="Globe">
+                <p class="city-txt">Pune</p>
+            </div>
+            <div class="city">
+                <img src="asserts/car.png" alt="Car">
+                <p class="city-txt">Chennai</p>
+            </div>
+            <div class="city">
+                <img src="asserts/seed.png" alt="Wheat">
+                <p class="city-txt">Chandigarh</p>
+            </div>
+        </div>
+        <img src="asserts/uu.png" alt="Bangalore" style="width: 100%;">
+        
+    </div>
+
+    <footer class="footercon" style="background: white; border-top: 2px solid;">
         <p class="foottxt"><a href="https://www.forbesindia.com/" target="_blank">© 2024, FORBESINDIA.COM ALL RIGHTS RESERVED</a> </p>
 <p class="foottxt">
     <a href="https://www.forbesindia.com/disclaimer/" target="_blank"> DISCLAMER</a>
