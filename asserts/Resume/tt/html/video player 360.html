@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<title>Html Coding</title>
+</head>
+
+<style>
+html,body {
+      height: 100%;
+      width: 100%;
+      background-color: #000;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+
+<body>
+<script src="https://cdn.radiantmediatechs.com/rmp/6.6.3/js/rmp.min.js"></script>
+<div id="rmpPlayer"></div>
+
+<script>
+
+        var src = {
+
+          hls: 'https://5b44cf20b0388.streamlock.net:8443/vod/smil:abr-360-prod.smil/playlist.m3u8'
+
+        };
+
+        var settings = {
+
+          licenseKey: 'Kl8lbz16cz1rN2l2enM9Z2M9NnZvMnllaT9yb201ZGFzaXMzMGRiMEElXyo=',
+
+          src: src,
+
+          width: 960,
+
+          height: 480,
+
+          video360: true,
+
+          video360FallbackSrc: {
+
+            hls: 'https://5b44cf20b0388.streamlock.net:8443/vod/smil:bbb.smil/playlist.m3u8'
+
+          },
+
+          contentMetadata: {
+
+            poster: [
+
+              'https://www.radiantmediaplayer.com/images/poster-rmp-360.jpg'
+
+            ]
+
+          }
+
+        };
+
+        var elementID = 'rmpPlayer';
+
+        var rmp = new RadiantMP(elementID);
+
+        rmp.init(settings);
+
+</script>
+</body>
+
+</html>

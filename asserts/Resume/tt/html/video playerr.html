@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>@htmlcoding_html_coding_free</title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+
+</head>
+<body>
+<div class="custom-video-area" id="custom-popout-video">
+
+  <div class="video-controls control">
+    <div class="top-wrapper">
+      <div class="progress-bar">
+        <span class="buffer-bar"></span>
+        <span class="time-bar"></span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="column">
+        <div class="bottom-wrapper">
+          <div class="play-button mini" title="Play/Pause Video"></div>
+          <div class="time">
+            <span class="current">00:00</span> / <span class="duration">00:00</span>
+          </div>
+          <div class="sound-button sound-med" title="Mute/Unmute sound"></div>
+          <div class="volume" title="Set volume">
+            <span class="volume-bar"></span>
+          </div>
+          <div class="btnFS btn" title="Switch to full screen"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <video class="video-element" id="video-element" preload="auto">
+  <source src="https://player.vimeo.com/external/214459842.hd.mp4?s=ca092a973fe74733eae802a90e1179eff23147fa&profile_id=119&oauth2_token_id=57447761">
+  </video>
+
+</div>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+ <script>
+$(".custom-video-area").each(function() {
+  // Video
+  var $video_container = $(this);
+  var $video = $(this).find("#video-element");
+
+  // Video Controls
+  var $video_controls = $(this).find(".video-controls");
+  var $button_controls = $(this).find(".bottom-wrapper");
+  var $progress_bar = $(this).find(".progress-bar");
+  var $progress = $(this).find(".time-bar");
+  var $buffer_bar = $(this).find(".buffer-bar");
+  var $play_button = $(this).find(".play-button");
+  var $mute_button = $(this).find(".sound-button");
+
+  var $volume_wrapper = $(this).find(".volume");
+  var $volume_bar = $(this).find(".volume-bar");
+
+  var $full_screen_btn = $(this).find(".btnFS");
+  var $current = $(this).find(".current");
+  var $duration = $(this).find(".duration");
+  var $fast_fwd = $(this).find("#fastFwd");
+
+  // Toggles play/pause for the video
+  function playVideo() {
+    if ($video[0].paused) {
+      $video[0].play();
+      $video_controls.addClass("playing");
+
+      if ($video_container.parents(".video-header").length) {
+        $video_container.parents(".video-header").addClass("playing");
+      }
+    } else {
+      $video[0].pause();
+      $video_controls.removeClass("playing");
+      $video_container.parents(".video-header").removeClass("playing");
+    }
+  }
+
+  function updateVolume(x, vol) {
+    if (vol) {
+      $percentage = vol * 100;
+    } else {
+      $position = x - $volume_wrapper.offset().left;
+      $percentage = 100 * $position / $volume_wrapper.width();
+    }
+
+    if ($percentage > 100) {
+      $percentage = 100;
+    }
+    if ($percentage < 0) {
+      $percentage = 0;
+    }
+
+    //update volume bar and video volume
+    $volume_bar.css("width", $percentage + "%");
+    $video[0].volume = $percentage / 100;
+
+    if ($video[0].volume == 0) {
+      $mute_button.removeClass("sound-med").addClass("sound-muted");
+    } else if ($video[0].volume > 0.5) {
+      $mute_button.removeClass("sound-muted").addClass("sound-med");
+    } else {
+      $mute_button.removeClass("sound-muted").removeClass("sound-med");
+    }
+  }
+
+  function changeSpeed() {
+    if ($video[0].playbackRate === 1) {
+      $video[0].playbackRate = 2;
+      $fast_fwd.text("2x Speed");
+    } else if ($video[0].playbackRate === 2) {
+      $video[0].playbackRate = 1;
+      $fast_fwd.text("1x Speed");
+    }
+  }
+
+  function launchFullscreen() {
+    if ($video[0].requestFullscreen) {
+      $video[0].requestFullscreen();
+    } else if ($video[0].mozRequestFullScreen) {
+      $video[0].mozRequestFullScreen();
+    } else if ($video[0].webkitRequestFullscreen) {
+      $video[0].webkitRequestFullscreen();
+    } else if ($video[0].msRequestFullscreen) {
+      $video[0].msRequestFullscreen();
+    }
+  }
+
+  function time_format(seconds) {
+    var m = Math.floor(seconds / 60) < 10
+      ? "0" + Math.floor(seconds / 60)
+      : Math.floor(seconds / 60);
+    var s = Math.floor(seconds - m * 60) < 10
+      ? "0" + Math.floor(seconds - m * 60)
+      : Math.floor(seconds - m * 60);
+    return m + ":" + s;
+  }
+
+  function startBuffer() {
+    $current_buffer = $video[0].buffered.end(0);
+    $max_duration = $video[0].duration;
+    $perc = 100 * $current_buffer / $max_duration;
+    $buffer_bar.css("width", $perc + "%");
+
+    if ($current_buffer < $max_duration) {
+      setTimeout(startBuffer, 500);
+    }
+  }
+
+  function updatebar(x) {
+    $position = x - $progress.offset().left;
+    $percentage = 100 * $position / $progress_bar.width();
+    if ($percentage > 100) {
+      $percentage = 100;
+    }
+    if ($percentage < 0) {
+      $percentage = 0;
+    }
+    $progress.css("width", $percentage + "%");
+    $video[0].currentTime = $video[0].duration * $percentage / 100;
+  }
+
+  $video.on("loadedmetadata", function() {
+    $current.text(time_format(0));
+    $duration.text(time_format($video[0].duration));
+    updateVolume(0, 0.7);
+    setTimeout(startBuffer, 150);
+  });
+
+  // Play/pause on video click
+  $video.click(function() {
+    playVideo();
+  });
+
+  // Video duration timer
+  $video.on("timeupdate", function() {
+    $current.text(time_format($video[0].currentTime));
+    $duration.text(time_format($video[0].duration));
+    var currentPos = $video[0].currentTime;
+    var maxduration = $video[0].duration;
+    var perc = 100 * $video[0].currentTime / $video[0].duration;
+    $progress.css("width", perc + "%");
+  });
+
+  /* VIDEO CONTROLS
+		------------------------------------------------------- */
+
+  // Hide button controls when video is playing
+  $video_container.on("mouseleave", function() {
+    if ($video[0].paused === false) {
+      $video_container.addClass("playing");
+    }
+  });
+
+  // Show button controls on hover
+  $video_container.on("mouseover", function() {});
+
+  // Play/pause on button click
+  $play_button.click(function() {
+    playVideo();
+  });
+
+  // Fast Forward Button
+  $fast_fwd.click(function() {
+    changeSpeed();
+  });
+
+  // Volume Drag
+  var volumeDrag = false;
+  $volume_wrapper.on("mousedown", function(e) {
+    volumeDrag = true;
+    $video[0].muted = false;
+    $mute_button.removeClass("muted");
+    updateVolume(e.pageX);
+  });
+
+  $(document).on("mouseup", function(e) {
+    if (volumeDrag) {
+      volumeDrag = false;
+      updateVolume(e.pageX);
+    }
+  });
+
+  $(document).on("mousemove", function(e) {
+    if (volumeDrag) {
+      updateVolume(e.pageX);
+    }
+  });
+
+  // Mute video on button click
+  $mute_button.click(function() {
+    $video[0].muted = !$video[0].muted;
+    $(this).toggleClass("sound-muted");
+    if ($video[0].muted) {
+      $volume_bar.css("width", 0);
+    } else {
+      $volume_bar.css("width", $video[0].volume * 100 + "%");
+    }
+  });
+
+  // Full Screen Button
+  $full_screen_btn.click(function() {
+    launchFullscreen();
+  });
+
+  // VIDEO PROGRESS BAR
+  //when video timebar clicked
+  var timeDrag = false; /* check for drag event */
+  $progress_bar.on("mousedown", function(e) {
+    timeDrag = true;
+    updatebar(e.pageX);
+  });
+  $(document).on("mouseup", function(e) {
+    if (timeDrag) {
+      timeDrag = false;
+      updatebar(e.pageX);
+    }
+  });
+  $(document).on("mousemove", function(e) {
+    if (timeDrag) {
+      updatebar(e.pageX);
+    }
+  });
+
+  // KEYBOARD CONTROLS - Not working
+
+  // Play/pause on spacebar
+  // $("body").on("keydown", function(e) {
+  // 	if(e.keyCode === 32 ) {
+  // 		e.preventDefault();
+  // 		// playVideo();
+  // 	}
+  // });
+
+  // Mute/sound on m key
+  // $("body").on("keydown", function(e) {
+  // 	if(e.keyCode === 77 ) {
+  // 		e.preventDefault();
+  // 		$video[0].muted = !$video[0].muted;
+  // 		$mute_button.toggleClass('sound-muted');
+  // 		if($video[0].muted) {
+  // 			$volume_bar.css('width',0);
+  // 		}
+  // 		else{
+  // 			$volume_bar.css('width', $video[0].volume*100+'%');
+  // 		}
+  // 	}
+  // });
+
+  // 2x speed with right arrow
+  // $("body").on("keydown", function(e) {
+  // 	if(e.keyCode === 39) {
+  // 		e.preventDefault();
+  // 		changeSpeed();
+  // 	}
+  // });
+
+  // Normal Speed
+  // $("body").on("keydown", function(e) {
+  // 	if(e.keyCode === 37) {
+  // 		e.preventDefault();
+  // 		changeSpeed();
+  // 	}
+  // });
+});
+</script>
+
+</body>
+<style>
+	@charset "UTF-8";
+.custom-video-area {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 72em;
+  height: 0;
+  margin: auto;
+  padding-bottom: 56.25%;
+  text-align: left;
+}
+.custom-video-area video {
+  position: absolute;
+  top: 0;
+  right: -50%;
+  bottom: 0;
+  left: -50%;
+  min-width: 100%;
+  width: 100%;
+  min-height: 100%;
+  margin: auto;
+}
+
+.video-controls {
+  position: absolute;
+  z-index: 10;
+  right: 0;
+  bottom: 0 !important;
+  left: 0;
+  width: 100%;
+  margin: auto;
+  padding: 0 0 15px 0;
+  transition: all 0.4s ease-in-out;
+  background: rgba(0, 0, 0, 0.5);
+}
+.video-controls.playing .play-button:before {
+  font-family: "FontAwesome";
+  content: "";
+  color: #fff;
+}
+.video-controls .top-wrapper {
+  display: block;
+}
+.video-controls .bottom-wrapper {
+  padding: 0 20px 0 20px;
+  display: block;
+}
+.video-controls .progress-bar {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 10px;
+  margin-bottom: 9px;
+  cursor: pointer;
+  background: rgba(37, 74, 224, 0.6);
+}
+.video-controls .progress-bar span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 0;
+  height: 100%;
+}
+.video-controls .progress-bar .time-bar {
+  z-index: 10;
+  background: #142b8b;
+}
+.video-controls .progress-bar .buffer-bar {
+  z-index: 5;
+  background: rgba(37, 74, 224, 0.6);
+}
+.video-controls .play-button {
+  display: inline-block;
+  width: 24px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.video-controls .play-button:before {
+  font-family: "FontAwesome";
+  content: "";
+  color: #fff;
+}
+.video-controls .time {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 12px;
+  display: inline-block;
+  width: 80px;
+  vertical-align: middle;
+  color: #fff;
+}
+.video-controls .sound-button {
+  display: inline-block;
+  width: 16px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.video-controls .sound-button:before {
+  font-family: "FontAwesome";
+  content: "";
+  color: #fff;
+}
+.video-controls .sound-med:before {
+  font-family: "FontAwesome";
+  content: "";
+  color: #fff;
+}
+.video-controls .sound-muted:before {
+  font-family: "FontAwesome";
+  content: "";
+  color: #fff;
+}
+.video-controls .volume {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  width: 70px;
+  height: 4px;
+  cursor: pointer;
+  vertical-align: middle;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.6);
+}
+.video-controls .volume .volume-bar {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  display: block;
+  height: 100%;
+  background-color: #fff;
+}
+.video-controls .btnFS {
+  position: relative;
+  top: 3px;
+  display: inline-block;
+  float: right;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.video-controls .btnFS:before {
+  font-family: "FontAwesome";
+  font-size: 14px;
+  content: "";
+  color: #fff;
+}
+</style>
+</html>
