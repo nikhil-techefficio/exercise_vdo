@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Employee Work Hours Tracker</h1>
+        <div class="upload-section">
+            <label for="fileUpload">Upload Excel File:</label>
+            <input type="file" id="fileUpload" accept=".xls,.xlsx">
+        </div>
+        <div class="filter-section">
+            <label for="employeeFilter">Select Employee:</label>
+            <select id="employeeFilter">
+                <option value="all">All Employees</option>
+            </select>
+            <label for="projectFilter">Select Project:</label>
+            <select id="projectFilter">
+                <option value="all">All Projects</option>
+            </select>
+            <button id="filterBtn">Apply Filters</button>
+        </div>
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>Employee Name</th>
+                    <th>Project</th>
+                    <th>Date</th>
+                    <th>Hours Worked</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div class="export-section">
+            <button id="exportExcel">Download as Excel</button>
+            <button id="exportJson">Download as JSON</button>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
